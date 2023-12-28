@@ -1,9 +1,12 @@
 from aiogram import types
-from main import my_disp
-from database.db_scripts import check_user_status
+from database.db_scripts import DbMethods
+from aiogram import Router
+from aiogram.filters import Command
+
+status_cmd_router = Router()
 
 
-@my_disp.message_handler(commands=["status"])
-async def cmd_status(message: types.Message):
-    status = await check_user_status(user_id=message.from_user.id)
+@status_cmd_router.message(Command("status"))
+async def status_cmd(message: types.Message):
+    status = DbMethods.check_user_status(user_id=message.from_user.id)
     await message.answer(text="Ваш статус: {}".format(status))

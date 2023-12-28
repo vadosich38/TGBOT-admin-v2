@@ -1,4 +1,4 @@
-from .admin import *
+from .admin_cmd import *
 from .delete_admin import *
 from .help import *
 from .new_admin import *
