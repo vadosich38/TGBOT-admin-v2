@@ -1,8 +1,11 @@
 from aiogram import types
-from main import my_disp
 from config_data.config import HELP_TEXT
+from aiogram.filters import Command
+from aiogram import Router
+
+help_cmd_router = Router()
 
 
-@my_disp.message_handler(commands=["help"])
-async def cmd_help(message: types.Message):
+@help_cmd_router.message(Command("help"))
+async def help_cmd(message: types.Message):
     await message.reply(text=HELP_TEXT)

@@ -5,7 +5,7 @@ from config_data.config import ADMIN
 from middlware.middleware import MyMiddleWares
 from tgset import my_disp
 
-from handlers import admin, delete_admin, help, new_admin, send, start, status
+from handlers import admin_cmd, delete_admin, help, new_admin, send, start, status
 
 
 async def on_startup(_):
