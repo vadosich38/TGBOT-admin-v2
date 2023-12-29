@@ -5,6 +5,7 @@ from aiogram import Router
 
 help_cmd_router = Router()
 
+#TODO документировать
 
 @help_cmd_router.message(Command("help"))
 async def help_cmd(message: types.Message):

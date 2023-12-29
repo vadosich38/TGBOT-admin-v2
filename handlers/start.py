@@ -1,9 +1,12 @@
 from datetime import datetime
 from aiogram import types
-from database.db_scripts import DbMethods
-from config_data.config import START_TEXT
 from aiogram import Router
 from aiogram.filters import CommandStart
+
+from database.db_scripts import DbMethods
+from config_data.config import START_TEXT
+from database.connection_fabric import get_db_conn
+#TODO документировать
 
 start_router = Router()
 
@@ -15,5 +18,5 @@ async def start_cmd(message: types.Message):
                        admin=0,
                        donor_id=0,
                        active=1,
-                       last_active=str(datetime.now()))
+                       last_active=str(datetime.now()), conn=get_db_conn())
     await message.answer(text=START_TEXT)

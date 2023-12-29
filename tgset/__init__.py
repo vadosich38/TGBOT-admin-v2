@@ -1,5 +1,4 @@
-from .storageset import *
-from .botset import *
-from .dispset import *
+from .bot_set import *
+from .dispatcher_set import *
 
 print("INIT tgset")

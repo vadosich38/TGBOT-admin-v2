@@ -1,19 +1,22 @@
 from aiogram.fsm.context import FSMContext
 from aiogram import types
-from states.states import MyStatesGroup
-from database.db_scripts import DbMethods
-from tgset import my_bot
 from aiogram.exceptions import TelegramAPIError
 from datetime import datetime
 from aiogram.filters import Command, StateFilter
 from aiogram import Router
+
+from states.states import MyStatesGroup
+from database.db_scripts import DbMethods
+from tgset import my_bot
+from database.connection_fabric import get_db_conn
+#TODO документировать
 
 send_cmd_router = Router()
 
 
 @send_cmd_router.message(Command("send"))
 async def send_cmd(message: types.Message, state: FSMContext):
-    res = DbMethods.check_user_status(user_id=message.from_user.id)
+    res = DbMethods.check_user_status(user_id=message.from_user.id, conn=get_db_conn())
     if res == "admin":
         await message.reply("Теперь пришлите сообщение, которое нужно разослать пользователям бота."
                             "\nЕсли вы хотите отменить рассылку, пришлите команду /cancel")
@@ -35,7 +38,7 @@ async def new_text_send(message: types.Message, state: FSMContext):
 
 @send_cmd_router.message(StateFilter(MyStatesGroup.send), Command("confirm"))
 async def confirm_cmd(state: FSMContext):
-    users_list = DbMethods.get_users_id()
+    users_list = DbMethods.get_users_id(conn=get_db_conn())
 
     success = 0
     failed = 0
@@ -45,10 +48,10 @@ async def confirm_cmd(state: FSMContext):
         try:
             await my_bot.send_message(chat_id=user_id[0],
                                       text=ads_data["send_text"])
-            DbMethods.update_user_data(user_id=user_id[0], active=1, last_active=str(datetime.now()))
+            DbMethods.update_user_data(user_id=user_id[0], active=1, last_active=str(datetime.now()), conn=get_db_conn())
             success += 1
         except TelegramAPIError as ex:
-            DbMethods.update_user_data(user_id=user_id[0], active=0)
+            DbMethods.update_user_data(user_id=user_id[0], active=0, conn=get_db_conn())
             print("Сообщение не отправлено:", ex)
             failed += 1
     else:
