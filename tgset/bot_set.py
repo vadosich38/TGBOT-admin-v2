@@ -1,6 +1,4 @@
-#TODO использовать шифрование данных secret_str
-
 from aiogram import Bot
-from config_data.config import API_KEY
+from config_reader import config
 
-my_bot = Bot(token=API_KEY, parse_mode="HTML")
+my_bot = Bot(token=config.bot_token.get_secret_value(), parse_mode="HTML")
