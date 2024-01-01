@@ -1,4 +1,4 @@
-from .db_scripts import *
-from connection_fabric import get_db_conn
+from .db_scripts import DbMethods
+from .connection_fabric import get_db_conn
 
 print("INIT database")
