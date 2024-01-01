@@ -1,7 +1,6 @@
 from database.connection_fabric import get_db_conn
 
 
-API_KEY = "6126620863:AAG8OxQQhtNnT0tsDoEMg6yDY1R8NcgenwI"
 ADMIN = 423997885
 HELP_TEXT = "СПИСОК КОМАНД"
 ADMIN_TEXT = "КАК СТАТЬ АДМИНОМ"
