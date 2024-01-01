@@ -1,5 +1,3 @@
-#TODO документировать
-
 import sqlite3 as sq
 
 
