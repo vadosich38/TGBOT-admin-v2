@@ -9,13 +9,20 @@ from states.states import MyStatesGroup
 from database.db_scripts import DbMethods
 from tgset import my_bot
 from database.connection_fabric import get_db_conn
-#TODO документировать
 
 send_cmd_router = Router()
 
 
 @send_cmd_router.message(Command("send"))
-async def send_cmd(message: types.Message, state: FSMContext):
+async def send_cmd(message: types.Message, state: FSMContext) -> None:
+    """
+    Хендлер команды /send
+    если команду вызвал администратор, он получает приглашения прислать текст рассылки. Состояние бота меняется на send
+    Иначе, сообщение об ошибке
+    :param message: объект сообщения
+    :param state: объект состояния
+    :return: None
+    """
     res = DbMethods.check_user_status(user_id=message.from_user.id, conn=get_db_conn())
     if res == "admin":
         await message.reply("Теперь пришлите сообщение, которое нужно разослать пользователям бота."
@@ -26,7 +33,14 @@ async def send_cmd(message: types.Message, state: FSMContext):
 
 
 @send_cmd_router.message(StateFilter(MyStatesGroup.send))
-async def new_text_send(message: types.Message, state: FSMContext):
+async def new_text_send(message: types.Message, state: FSMContext) -> None:
+    """
+    Хендлер сообщения, принимающий текст для рассылки. Срабатывает только в состоянии бота send
+    после записи текста в память состояния бота, пользователю предлагается подтвердить правильность текста
+    :param message: объект сообщения
+    :param state: объект состояния
+    :return: None
+    """
     await message.answer(text="Ваше сообщение будет выглядеть так:")
     await my_bot.send_message(chat_id=message.from_user.id,
                               text=message.text)
@@ -37,7 +51,14 @@ async def new_text_send(message: types.Message, state: FSMContext):
 
 
 @send_cmd_router.message(StateFilter(MyStatesGroup.send), Command("confirm"))
-async def confirm_cmd(state: FSMContext):
+async def confirm_cmd(state: FSMContext) -> None:
+    """
+    Колбек хендлер подтверждения корректности текста рассылки
+    срабатывает только в состоянии бота send
+    выполняется рассылка текста, после окончания рассылки состояние текста очищается
+    :param state: объект состояния
+    :return: None
+    """
     users_list = DbMethods.get_users_id(conn=get_db_conn())
 
     success = 0
@@ -62,6 +83,14 @@ async def confirm_cmd(state: FSMContext):
 
 
 @send_cmd_router.message(Command("cancel"), StateFilter(MyStatesGroup.send))
-async def cancel_send_cmd(message: types.Message, state: FSMContext):
+async def cancel_send_cmd(message: types.Message, state: FSMContext) -> None:
+    """
+    Хендлер команды /cancel
+    команда отменяет рассылку текста
+    состояние бота очищается
+    :param message: объект сообщения
+    :param state: объект состояния
+    :return: None
+    """
     await message.reply("Вы отменили создание рассылки")
     await state.clear()

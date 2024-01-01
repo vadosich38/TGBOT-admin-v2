@@ -3,10 +3,14 @@ from typing import Any, Awaitable, Callable, Dict, Union
 from aiogram.types import Message, CallbackQuery
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.dispatcher.middlewares.error import CancelHandler
-#TODO документировать
 
 
 class MyMiddleWare(BaseMiddleware):
+    """
+    Мидлвар класс
+    проверяет все сообщения на источник происхождения - тип чата
+    если тип чата не приватный, бот не обрабатывает никаких обновлений
+    """
     async def __call__(
             self,
             handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
