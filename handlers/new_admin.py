@@ -22,12 +22,6 @@ async def new_admin_cmd(message: types.Message, state: FSMContext):
                                  "Как стать администратором - /admin")
 
 
-@new_admin_router.message(Command("cancel"), StateFilter(MyStatesGroup.wait_id))
-async def cancel_cmd(message: types.Message, state: FSMContext):
-    await message.reply(text="Вы отменили добавление нового администратора!")
-    await state.clear()
-
-
 @new_admin_router.message(StateFilter(MyStatesGroup.wait_id))
 async def new_admin_id(message: types.Message, state: FSMContext):
     if 9 <= len(message.text.strip()) <= 10:
@@ -50,3 +44,9 @@ async def new_admin_id(message: types.Message, state: FSMContext):
     else:
         await message.reply(text="ID пользователя указан не верно! Длина ID составляет 9 или 10 символов."
                                  "\nПопробуйте снова или отменить добавление администратора /cancel")
+
+
+@new_admin_router.message(Command("cancel"), StateFilter(MyStatesGroup.wait_id))
+async def cancel_cmd(message: types.Message, state: FSMContext):
+    await message.reply(text="Вы отменили добавление нового администратора!")
+    await state.clear()
