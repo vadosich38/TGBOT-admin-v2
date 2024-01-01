@@ -48,7 +48,7 @@ async def main() -> None:
     my_disp.include_routers(start_router, help_cmd_router, admin_cmd_router, delete_admin_router, new_admin_router,
                             send_cmd_router, status_cmd_router)
     # регистрируем middleware в диспетчере сразу для всех обновлений (событий)
-    my_disp.update.outer_middleware.register(MyMiddleWare)
+    my_disp.update.outer_middleware.register(MyMiddleWare())
 
     async with my_bot.context():
         await my_bot.delete_webhook(drop_pending_updates=True)
